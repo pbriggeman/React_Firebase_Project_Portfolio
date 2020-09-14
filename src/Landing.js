@@ -1,6 +1,9 @@
-import React from 'react';
+import React, { Component } from 'react';
+import { compose } from 'recompose';
 import 'fontsource-roboto';
 import './Landing.css';
+
+import { withFirebase } from './FirebaseContextInit';
 
 import Button from '@material-ui/core/Button';
 import Card from '@material-ui/core/Card';
@@ -9,18 +12,18 @@ import CardContent from '@material-ui/core/CardContent';
 import CardMedia from '@material-ui/core/CardMedia';
 import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
-import { makeStyles } from '@material-ui/core/styles';
+import { withStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
-import FormLabel from '@material-ui/core/FormLabel';
-import FormControl from '@material-ui/core/FormControl';
-import FormGroup from '@material-ui/core/FormGroup';
-import FormControlLabel from '@material-ui/core/FormControlLabel';
-import FormHelperText from '@material-ui/core/FormHelperText';
-import Checkbox from '@material-ui/core/Checkbox';
+import CircularProgress from '@material-ui/core/CircularProgress';
+// import { ConfirmationNumberOutlined } from '@material-ui/icons';
+// import FormLabel from '@material-ui/core/FormLabel';
+// import FormControl from '@material-ui/core/FormControl';
+// import FormGroup from '@material-ui/core/FormGroup';
+// import FormControlLabel from '@material-ui/core/FormControlLabel';
+// import FormHelperText from '@material-ui/core/FormHelperText';
+// import Checkbox from '@material-ui/core/Checkbox';
 
-// import  { FirebaseContext } from './FirebaseContextInit';
-
-const useStyles = makeStyles((theme) => ({
+const useStyles = theme => ({
   icon: {
     marginRight: theme.spacing(2),
   },
@@ -52,150 +55,120 @@ const useStyles = makeStyles((theme) => ({
   },
   root: {
     display: 'flex',
+    '& > * + *': {
+      marginLeft: theme.spacing(24),
+    },
   },
   formControl: {
     margin: theme.spacing(3),
   },
-}));
+  circularProgress: {
+    // border: '1px solid #ff0000',
+    textAlign: 'center',
+  },
+});
 
-const cards = [1, 2, 3, 4, 5, 6, 7, 8, 9];
+const LandingPage = () => (
+  <div>
+    <Landing/>
+  </div>
+);
 
-function Landing() {
-  const classes = useStyles();
+const INITIAL_STATE = {
+  projects: [],
+  role: "",
+  loading: false,
+  error: null,
+};
 
-  const [state, setState] = React.useState({
-    gilad: true,
-    jason: false,
-    antoine: false,
-  });
+const Loader = () => (
+  <div>
+    <CircularProgress />
+  </div>
+)
+class LandingBase extends Component {
+  constructor(props) {
+    super(props);
 
-  const handleChange = (event) => {
-    setState({ ...state, [event.target.name]: event.target.checked });
+    this.state = { ...INITIAL_STATE };
+
+    this.getAllProjects = this.getAllProjects.bind(this);
+    // this.getRole = this.getRole.bind(this);
+  }
+  
+  getAllProjects = () => {
+    this.props.firebase.projects()
+    .get()
+    .then(querySnapshot => {
+      const data = querySnapshot.docs.map(doc => doc.data());
+      console.log(data);
+      this.setState({
+        projects: data,
+        loading: false
+      });
+    });
   };
 
-  const { gilad, jason, antoine } = state;
-  const error = [gilad, jason, antoine].filter((v) => v).length !== 2;
+  componentDidMount() {
+    this.setState({
+      loading: true,
+    });
+    this.getAllProjects();
+  }
 
-  return (
-    <React.Fragment>
-      <main>
-        {/* Hero unit */}
-        <div className={classes.heroContent}>
-          <Container maxWidth="sm">
-            <Typography component="h1" variant="h2" align="center" color="textPrimary" gutterBottom>
-              Album layout
-            </Typography>
-            <Typography variant="h5" align="center" color="textSecondary" paragraph>
-              Something short and leading about the collection below—its contents, the creator, etc.
-              Make it short and sweet, but not too short so folks don&apos;t simply skip over it
-              entirely.
-            </Typography>
-            <div className={classes.heroButtons}>
-              <Grid container spacing={2} justify="center">
-                <Grid item>
-                  <Button variant="contained" color="primary">
-                    Main call to action
-                  </Button>
-                </Grid>
-                <Grid item>
-                  <Button variant="outlined" color="primary">
-                    Secondary action
-                  </Button>
-                </Grid>
+  render () {
+    const { classes } = this.props;
+    
+
+    return (
+          <Container className={classes.cardGrid} maxWidth="md">          
+            <Grid container spacing={4}>
+              <Grid item xs={12} sm={6} md={4} className={classes.circularProgress}>
               </Grid>
-            </div>
-            <div className={classes.heroButtons}>
-              <Grid container spacing={2} justify="center">
-                <Grid item>
-                  <div className={classes.root}>
-                    <FormControl component="fieldset" className={classes.formControl}>
-                      <FormLabel component="legend">Assign responsibility</FormLabel>
-                      <FormGroup>
-                        <FormControlLabel
-                          control={<Checkbox checked={gilad} onChange={handleChange} name="gilad" />}
-                          label="Gilad Gray"
-                        />
-                        <FormControlLabel
-                          control={<Checkbox checked={jason} onChange={handleChange} name="jason" />}
-                          label="Jason Killian"
-                        />
-                        <FormControlLabel
-                          control={<Checkbox checked={antoine} onChange={handleChange} name="antoine" />}
-                          label="Antoine Llorca"
-                        />
-                      </FormGroup>
-                      <FormHelperText>Be careful</FormHelperText>
-                    </FormControl>
-                    <FormControl required error={error} component="fieldset" className={classes.formControl}>
-                      <FormLabel component="legend">Pick two</FormLabel>
-                      <FormGroup>
-                        <FormControlLabel
-                          control={<Checkbox checked={gilad} onChange={handleChange} name="gilad" />}
-                          label="Gilad Gray"
-                        />
-                        <FormControlLabel
-                          control={<Checkbox checked={jason} onChange={handleChange} name="jason" />}
-                          label="Jason Killian"
-                        />
-                        <FormControlLabel
-                          control={<Checkbox checked={antoine} onChange={handleChange} name="antoine" />}
-                          label="Antoine Llorca"
-                        />
-                      </FormGroup>
-                      <FormHelperText>You can display an error</FormHelperText>
-                    </FormControl>
-                  </div>
-                </Grid>
+              <Grid item xs={12} sm={6} md={4} className={classes.circularProgress}>
+                {this.state.loading && <Loader />}
               </Grid>
-            </div>
+            </Grid>
+            <Grid container spacing={4}>
+              {this.state.projects.map((project) => (
+                <Grid item key={project.id} xs={12} sm={6} md={4}>
+                  <Card className={classes.card}>
+                    <CardMedia
+                      className={classes.cardMedia}
+                      image="https://source.unsplash.com/random"
+                      title="Image title"
+                    />
+                    <CardContent className={classes.cardContent}>
+                      <Typography gutterBottom variant="h5" component="h2">
+                        {project.title}
+                      </Typography>
+                      <Typography>
+                      {project.description}
+                      </Typography>
+                    </CardContent>
+                    <CardActions>
+                      <Button size="small" color="primary">
+                        View
+                      </Button>
+                      <Button size="small" color="primary">
+                        Edit
+                      </Button>
+                    </CardActions>
+                  </Card>
+                </Grid>
+              ))}
+            </Grid>
             
           </Container>
-        </div>
-        <Container className={classes.cardGrid} maxWidth="md">
-          {/* End hero unit */}
-          <Grid container spacing={4}>
-            {cards.map((card) => (
-              <Grid item key={card} xs={12} sm={6} md={4}>
-                <Card className={classes.card}>
-                  <CardMedia
-                    className={classes.cardMedia}
-                    image="https://source.unsplash.com/random"
-                    title="Image title"
-                  />
-                  <CardContent className={classes.cardContent}>
-                    <Typography gutterBottom variant="h5" component="h2">
-                      Heading
-                    </Typography>
-                    <Typography>
-                      This is a media card. You can use this section to describe the content.
-                    </Typography>
-                  </CardContent>
-                  <CardActions>
-                    <Button size="small" color="primary">
-                      View
-                    </Button>
-                    <Button size="small" color="primary">
-                      Edit
-                    </Button>
-                  </CardActions>
-                </Card>
-              </Grid>
-            ))}
-          </Grid>
-        </Container>
-      </main>
-    </React.Fragment>
-    // <div>
-    //   <h1>
-    //     Landing
-    //   </h1>
-    //   <FirebaseContext.Consumer>
-    //     {firebase => {
-    //       return <div>I've access to Firebase and render something.</div>;
-    //     }}
-    //   </FirebaseContext.Consumer>
-    // </div>
-  );
+
+    );
+  }
 }
 
-export default Landing;
+
+const Landing = compose(
+  withFirebase,
+  withStyles(useStyles, { withTheme: true }),
+)(LandingBase);
+
+export default LandingPage;

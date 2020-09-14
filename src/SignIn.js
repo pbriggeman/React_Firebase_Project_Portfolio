@@ -156,7 +156,7 @@ class SignInFormBase extends Component {
 						</Grid>
 						<Grid container>
 							<Grid item xs>
-								<Typography component="h1" variant="body2" className={classes.error}>
+								<Typography component="h1" variant="body2" className={this.props.classes.error}>
 									{error && <p>{error.message}</p>}
 								</Typography>
 							</Grid>

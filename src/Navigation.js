@@ -1,5 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
+import { withFirebase } from './FirebaseContextInit';
 import './Navigation.css';
 
 import AppBar from '@material-ui/core/AppBar';
@@ -18,7 +19,7 @@ const styleLogoLink = {
   marginRight: '20px'
 };
 
-const Navigation = () => (
+const Navigation = ({ firebase }) => (
 	<div>
 		<AppBar position="relative">
 			<Toolbar>
@@ -39,27 +40,34 @@ const Navigation = () => (
 									Blog
 								</Typography>
 							</Grid>
-						</Grid>            
+						</Grid>						           
 					</Grid>
-					<Grid item>
-						<div>
-							<AuthUserContext.Consumer>
-								{authUser =>
-									authUser ? <NavigationAuth /> : <NavigationNonAuth />
-								}
-							</AuthUserContext.Consumer>
-						</div>
-					</Grid>
+					<Grid item>						
+						<AuthUserContext.Consumer>
+							{authUser =>
+								authUser ? <NavigationAuth firebase={firebase} /> : <NavigationNonAuth />
+							}
+						</AuthUserContext.Consumer>			           
+					</Grid>					
 				</Grid>
 			</Toolbar>
 		</AppBar>
 	</div>
 );
 
-const NavigationAuth = () => (
-	<Button component={ Link } to="/signout" variant="contained" startIcon={<LaunchIcon />}>
-		Sign Out
-	</Button>
+const NavigationAuth = ({ firebase }) => (
+	<Grid container justify="flex-end">
+		<Grid item>
+			<Typography style={styleLogoLink} component={ Link } to="/addproject" variant="h6" color="inherit" noWrap>
+				Add Project
+			</Typography>
+		</Grid>
+		<Grid item>
+			<Button component={ Link } to="/" variant="contained" startIcon={<LaunchIcon />} onClick={firebase.doSignOut}>
+				Sign Out
+			</Button>
+		</Grid>
+	</Grid>
 	// <SignOutButton />
 	
 	// <ul>
@@ -82,9 +90,14 @@ const NavigationAuth = () => (
 );
 
 const NavigationNonAuth = () => (
-	<Button component={ Link } to="/signin" variant="contained" startIcon={<ExitToAppIcon />}>
-		Sign In
-	</Button>
+	<div>
+		<Grid item>
+			<Button component={ Link } to="/signin" variant="contained" startIcon={<ExitToAppIcon />}>
+				Sign In
+			</Button>
+		</Grid>
+	</div>
+	
 	
 	// <ul>
 	// 	<li>
@@ -96,4 +109,4 @@ const NavigationNonAuth = () => (
 	// </ul>
 );
 
-export default Navigation;
+export default withFirebase(Navigation);
