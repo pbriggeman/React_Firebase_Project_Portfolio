@@ -44,6 +44,7 @@ class Firebase {
 
   // *** Project API *** 
   projects = () => this.fs.collection('samples');
+  project = uid => this.fs.collection(`samples/${uid}`); 
 }
 
 export default Firebase;

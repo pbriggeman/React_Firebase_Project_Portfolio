@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { compose } from 'recompose';
+import { Link } from 'react-router-dom';
 import 'fontsource-roboto';
 import './Landing.css';
 
@@ -121,46 +122,44 @@ class LandingBase extends Component {
     
 
     return (
-          <Container className={classes.cardGrid} maxWidth="md">          
-            <Grid container spacing={4}>
-              <Grid item xs={12} sm={6} md={4} className={classes.circularProgress}>
-              </Grid>
-              <Grid item xs={12} sm={6} md={4} className={classes.circularProgress}>
-                {this.state.loading && <Loader />}
-              </Grid>
-            </Grid>
-            <Grid container spacing={4}>
-              {this.state.projects.map((project) => (
-                <Grid item key={project.id} xs={12} sm={6} md={4}>
-                  <Card className={classes.card}>
-                    <CardMedia
-                      className={classes.cardMedia}
-                      image="https://source.unsplash.com/random"
-                      title="Image title"
-                    />
-                    <CardContent className={classes.cardContent}>
-                      <Typography gutterBottom variant="h5" component="h2">
-                        {project.title}
-                      </Typography>
-                      <Typography>
-                      {project.description}
-                      </Typography>
-                    </CardContent>
-                    <CardActions>
-                      <Button size="small" color="primary">
-                        View
-                      </Button>
-                      <Button size="small" color="primary">
-                        Edit
-                      </Button>
-                    </CardActions>
-                  </Card>
-                </Grid>
-              ))}
-            </Grid>
-            
-          </Container>
-
+    <Container className={classes.cardGrid} maxWidth="md">          
+      <Grid container spacing={4}>
+        <Grid item xs={12} sm={6} md={4} className={classes.circularProgress}>
+        </Grid>
+        <Grid item xs={12} sm={6} md={4} className={classes.circularProgress}>
+          {this.state.loading && <Loader />}
+        </Grid>
+      </Grid>
+      <Grid container spacing={4}>
+        {this.state.projects.map((project) => (
+          <Grid item key={project.id} xs={12} sm={6} md={4}>
+            <Card className={classes.card}>
+              <CardMedia
+                className={classes.cardMedia}
+                image="https://source.unsplash.com/random"
+                title="Image title"
+              />
+              <CardContent className={classes.cardContent}>
+                <Typography gutterBottom variant="h5" component="h2">
+                  {project.title}
+                </Typography>
+                <Typography>
+                {project.description}
+                </Typography>
+              </CardContent>
+              <CardActions>
+                <Button component={ Link } to={"/viewproject/" + project.id} size="small" color="primary">
+                  View
+                </Button>
+                {/* <Button size="small" color="primary">
+                  Edit
+                </Button> */}
+              </CardActions>
+            </Card>
+          </Grid>
+        ))}
+      </Grid>      
+    </Container>
     );
   }
 }
