@@ -38,13 +38,13 @@ class Firebase {
   doPasswordUpdate = password =>
     this.auth.currentUser.updatePassword(password);
 
-  // *** User API *** 
-  user = uid => this.db.ref(`users/${uid}`); 
+  // *** User API ***    
   users = () => this.db.ref('users');
+  user = uid => this.db.ref(`users/${uid}`);
 
   // *** Project API *** 
   projects = () => this.fs.collection('samples');
-  project = uid => this.fs.collection(`samples/${uid}`); 
+  project = pid => this.fs.collection(`samples/${pid}`); 
 }
 
 export default Firebase;
