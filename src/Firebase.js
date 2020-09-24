@@ -44,7 +44,15 @@ class Firebase {
 
   // *** Project API *** 
   projects = () => this.fs.collection('samples');
-  project = pid => this.fs.collection(`samples/${pid}`); 
+  getProject = pid => this.projects()
+    .doc(pid)
+    .get()
+    .then(function(documentSnapshot) {
+      if (documentSnapshot.exists) {
+        return documentSnapshot.data();
+      }
+      return;
+    });
 }
 
 export default Firebase;
