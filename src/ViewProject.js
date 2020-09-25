@@ -4,13 +4,17 @@ import { useParams, Link } from "react-router-dom";
 import './ViewProject.css';
 import { AuthUserContext } from './SessionContextInit';
 
+import CssBaseline from '@material-ui/core/CssBaseline';
 import { makeStyles } from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button';
 import Grid from '@material-ui/core/Grid';
 import EditIcon from '@material-ui/icons/Edit';
 import DeleteIcon from '@material-ui/icons/Delete';
+import ShareIcon from '@material-ui/icons/Share';
+import ArrowBackIcon from '@material-ui/icons/ArrowBack';
 import Typography from '@material-ui/core/Typography';
 import CircularProgress from '@material-ui/core/CircularProgress';
+import Container from '@material-ui/core/Container';
 
 const useStyles = makeStyles((theme) => ({
   icon: {
@@ -50,26 +54,29 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const UserControlsNonAuth = () => (
+const UserControlsNonAuth = (props) => (
 	<div>
-		<Grid item>
-			<Button component={ Link } to="/editproject" variant="contained" startIcon={<EditIcon />}>
-				Edit Project
+		<Grid item align="center">
+      <Button component={ Link } to="/" variant="contained" startIcon={<ArrowBackIcon />} className={ props.styles.formControl}>
+				Portfolio
 			</Button>
-      <Button component={ Link } to="/deleteproject" variant="contained" startIcon={<DeleteIcon />}>
-				Delete Project
+      <Button component={ Link } to="/editproject" variant="contained" startIcon={<ShareIcon />} className={ props.styles.formControl}>
+				Share Project
 			</Button>
 		</Grid>
 	</div>
 );
 
-const UserControlsAuth = () => (
+const UserControlsAuth = (props) => (
 	<div>
-		<Grid item>
-			<Button component={ Link } to="/editproject" variant="contained" startIcon={<EditIcon />}>
+		<Grid item align="center">
+      <Button component={ Link } to="/" variant="contained" startIcon={<ArrowBackIcon />} className={ props.styles.formControl}>
+				Portfolio
+			</Button>
+      <Button component={ Link } to="/editproject" variant="contained" startIcon={<EditIcon />} className={ props.styles.formControl}>
 				Edit Project
 			</Button>
-      <Button component={ Link } to="/deleteproject" variant="contained" startIcon={<DeleteIcon />}>
+      <Button component={ Link } to="/deleteproject" variant="contained" startIcon={<DeleteIcon />} className={ props.styles.formControl}>
 				Delete Project
 			</Button>
 		</Grid>
@@ -103,35 +110,41 @@ function ViewProject(props) {
   }
   
   return (  
-    <div className={classes.heroContent}>
-      { loading && <CircularProgress /> }
-      { error &&
-        <Typography variant="body2" color="textSecondary" align="center">
-          {errMessage}
-        </Typography>
-      }
-      { !error && hasSucceeded &&
-        <div>
+    <Container component="main" maxWidth="md">
+      <CssBaseline />
+      <Typography component="h1" variant="h5" align="center" className={classes.formControl}>
+        Project Details
+      </Typography>
+      <div className={classes.paper}>    
+        { loading && <CircularProgress /> }
+        { error &&
           <Typography variant="body2" color="textSecondary" align="center">
-            Title: {data.title}
+            {errMessage}
           </Typography>
-          <Typography variant="body2" color="textSecondary" align="center">
-            Description: {data.description}
-          </Typography>
-          <Typography variant="body2" color="textSecondary" align="center">
-            URL: {data.url}
-          </Typography>
-          <Typography variant="body2" color="textSecondary" align="center">
-            Image: {data.image }
-          </Typography>
-          <AuthUserContext.Consumer>
-            {authUser =>
-              authUser ? <UserControlsAuth /> : <UserControlsNonAuth />
-            }
-          </AuthUserContext.Consumer>
-        </div>	
-      }          
-    </div>
+        }
+        { !error && hasSucceeded &&          
+          <div>
+            <Typography variant="h6" gutterBottom align="center">
+              {data.title}
+            </Typography>
+            <Typography variant="body2" color="textSecondary" align="left">
+              <b>Description:</b> {data.description}e
+            </Typography>
+            <Typography variant="body2" color="textSecondary" align="left">
+            <b>URL:</b> {data.url}
+            </Typography>
+            <Typography variant="body2" color="textSecondary" align="left">
+            <b>Image:</b> {data.image }
+            </Typography>
+            <AuthUserContext.Consumer>
+              {authUser =>
+                authUser ? <UserControlsAuth styles={classes} /> : <UserControlsNonAuth styles={classes} />
+              }
+            </AuthUserContext.Consumer>
+          </div>	
+        }          
+      </div>
+    </Container>
   );
 }
 

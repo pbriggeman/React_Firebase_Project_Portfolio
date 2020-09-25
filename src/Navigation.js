@@ -26,7 +26,6 @@ const Navigation = ({ firebase }) => (
 				<Grid
 					justify="space-between"
 					container 
-					spacing={10}
 				>
 					<Grid item>
 						<Grid container justify="flex-start">
