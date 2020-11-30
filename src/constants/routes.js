@@ -6,3 +6,4 @@ export const ACCOUNT = '/account';
 export const ADMIN = '/admin';
 export const PASSWORD_FORGET = '/pw-forget';
 export const VIEW_PROJECT = '/viewproject/:id';
+export const EDIT_PROJECT = '/editproject/:id';

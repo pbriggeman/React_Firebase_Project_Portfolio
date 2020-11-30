@@ -9,7 +9,8 @@ import PasswordForgetPage from './PasswordForget';
 import HomePage from './Home';
 import AccountPage from './Account';
 import AdminPage from './Admin';
-import ViewProjectPage from './ViewProject'
+import ProjectViewPage from './ProjectView'
+import ProjectEditPage from './ProjectEdit'
 
 import * as ROUTES from './constants/routes';
 import { withAuthentication } from './SessionContextInit';
@@ -25,7 +26,8 @@ const App = () => (
       <Route path={ROUTES.HOME} component={HomePage} />
       <Route path={ROUTES.ACCOUNT} component={AccountPage} />
       <Route path={ROUTES.ADMIN} component={AdminPage} />
-      <Route path={ROUTES.VIEW_PROJECT} component={ViewProjectPage} />
+      <Route path={ROUTES.VIEW_PROJECT} component={ProjectViewPage} />
+      <Route path={ROUTES.EDIT_PROJECT} component={ProjectEditPage} />
     </div>
   </Router>
 );

@@ -1,7 +1,7 @@
 import React from 'react';
 import { withFirebase } from './FirebaseContextInit';
 import { useParams, Link } from "react-router-dom";
-import './ViewProject.css';
+import './ProjectView.css';
 import { AuthUserContext } from './SessionContextInit';
 
 import CssBaseline from '@material-ui/core/CssBaseline';
@@ -73,10 +73,10 @@ const UserControlsAuth = (props) => (
       <Button component={ Link } to="/" variant="contained" startIcon={<ArrowBackIcon />} className={ props.styles.formControl}>
 				Portfolio
 			</Button>
-      <Button component={ Link } to="/editproject" variant="contained" startIcon={<EditIcon />} className={ props.styles.formControl}>
+      <Button component={ Link } to={ "/editproject/" + props.id} variant="contained" startIcon={<EditIcon />} className={ props.styles.formControl}>
 				Edit Project
 			</Button>
-      <Button component={ Link } to="/deleteproject" variant="contained" startIcon={<DeleteIcon />} className={ props.styles.formControl}>
+      <Button component={ Link } to={ "/deleteproject/" + props.id} variant="contained" startIcon={<DeleteIcon />} className={ props.styles.formControl}>
 				Delete Project
 			</Button>
 		</Grid>
@@ -116,7 +116,11 @@ function ViewProject(props) {
         Project Details
       </Typography>
       <div className={classes.paper}>    
-        { loading && <CircularProgress /> }
+        { loading &&
+          <Typography variant="body2" color="textSecondary" align="center">
+            <CircularProgress />
+          </Typography>          
+        }
         { error &&
           <Typography variant="body2" color="textSecondary" align="center">
             {errMessage}
@@ -138,7 +142,7 @@ function ViewProject(props) {
             </Typography>
             <AuthUserContext.Consumer>
               {authUser =>
-                authUser ? <UserControlsAuth styles={classes} /> : <UserControlsNonAuth styles={classes} />
+                authUser ? <UserControlsAuth styles={classes} id={id} /> : <UserControlsNonAuth styles={classes} />
               }
             </AuthUserContext.Consumer>
           </div>	

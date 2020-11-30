@@ -20,7 +20,6 @@ class Firebase {
 
     this.auth = app.auth();
     this.db = app.database();
-    // this.coll = this.db.collection();
     this.fs = app.firestore();
   }
 
@@ -40,18 +39,28 @@ class Firebase {
 
   // *** User API ***    
   users = () => this.db.ref('users');
+
   user = uid => this.db.ref(`users/${uid}`);
 
   // *** Project API *** 
   projects = () => this.fs.collection('samples');
+
   getProject = pid => this.projects()
     .doc(pid)
     .get()
-    .then(function(documentSnapshot) {
-      if (documentSnapshot.exists) {
-        return documentSnapshot.data();
+    .then(function(snapshot) {
+      if (snapshot.exists) {
+        return snapshot.data();
       }
       return;
+    });
+
+  updateProject = project => this.projects()
+    .doc(project.id)
+    .update({
+        title: project.title,
+        url: project.url,
+        image: project.image,
     });
 }
 
