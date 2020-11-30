@@ -164,7 +164,6 @@ class LandingBase extends Component {
   }
 }
 
-
 const Landing = compose(
   withFirebase,
   withStyles(useStyles, { withTheme: true }),
